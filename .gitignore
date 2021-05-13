@@ -1,0 +1,46 @@
+# temp files from editors
+*~
+*.bak
+.DS_Store
+.buildpath
+.project
+.settings
+*.tmproj
+.idea
+.vscode
+nbproject/
+
+# vagrant work directory
+.vagrant
+
+# hidden files created by Windows
+Thumbs.db
+desktop.ini
+
+# the composer package lock file and install directory
+/composer*
+composer.json
+/fuel/vendor/composer/installed.json
+package-lock.json
+
+# dynamically generated files
+/.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/coverage
+/js/build
+/fuel/app/logs/*/*/*
+/fuel/app/cache/*/*
+/fuel/app/config/crypt.php
+node_modules
+/public/uploads
+
+# local configuration
+Vagrantfile.local
+/fuel/app/config/development/*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

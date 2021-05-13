@@ -1,0 +1,59 @@
+# Multiple Environment config, set this to development, staging or production
+# SetEnv FUEL_ENV production
+
+<IfModule mod_rewrite.c>
+
+    RewriteEngine on
+
+    # NOTICE: If you get a 404 play with combinations of the following commented out lines
+    #AllowOverride All
+    #RewriteBase /wherever/fuel/is
+
+    # Make sure directory listing is disabled
+    Options +FollowSymLinks -Indexes
+
+    # make HTTP Basic Authentication work on php-fcgi installs
+    <IfModule mod_fcgid.c>
+        RewriteCond %{HTTP:Authorization} .
+        RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    </IfModule>
+
+    # Send request via index.php if not a real file or directory
+    RewriteCond %{REQUEST_URI} ^/api [NC]
+
+    # deal with php-fcgi first
+    <IfModule mod_fcgid.c>
+        RewriteRule ^(api.*)$ index.php?/$1 [QSA,L]
+    </IfModule>
+
+    # no php-fcgi, check for sapi and fpm
+    <IfModule !mod_fcgid.c>
+
+        # for PHP5 sapi installations
+        <IfModule mod_php5.c>
+            RewriteRule ^(api.*)$ index.php/$1 [L]
+        </IfModule>
+
+        <IfModule !mod_php5.c>
+
+            # for PHP7 sapi installations
+            <IfModule mod_php7.c>
+                RewriteRule ^(api.*)$ index.php/$1 [L]
+            </IfModule>
+
+            # for fpm installations
+            <IfModule !mod_php7.c>
+                RewriteRule ^(api.*)$ index.php?/$1 [QSA,L]
+            </IfModule>
+
+        </IfModule>
+
+    </IfModule>
+
+    # requests to filemanager
+    RewriteCond %{REQUEST_URI} !^/index.html [NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule ^(.*)$ index.html [L]
+</IfModule>
